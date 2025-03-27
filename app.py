@@ -12,7 +12,6 @@ import pickle
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-# Load dataset
 df = pd.read_csv("/Users/manavjotsingh/pythonProject/Mall_Customers.csv.xls")
 
 # Selecting relevant columns for clustering
@@ -42,7 +41,7 @@ df_encoded = encoder.predict(df_scaled)
 
 # Streamlit UI Code
 st.set_page_config(page_title="Customer Segmentation App", layout="wide")
-st.title('📊 Customer Segmentation App')
+st.title('Customer Segmentation App')
 
 with st.sidebar:
     selected = option_menu("Navigation", ["Home", "Upload & Predict"], icons=["house", "upload"], menu_icon="cast",
@@ -63,28 +62,28 @@ with open('kmeans_model.pkl', 'wb') as file:
     pickle.dump(kmeans, file)
 
 if selected == "Home":
-    st.header('🔹 Overview')
+    st.header('Overview')
     st.write("""
-    Welcome to the *Customer Segmentation App*! 🎯  
-    This application uses *Autoencoders* and *KMeans Clustering* to segment customers based on:
-    - *Age*  
-    - *Annual Income*  
-    - *Spending Score*  
+    Welcome to the Customer Segmentation App!  
+    This application uses Autoencoders and KMeans Clustering to segment customers based on:
+    - Age  
+    - Annual Income  
+    - Spending Score  
 
-    ### ✨ Features:
-    - *Automatically groups customers* into different clusters  
-    - *Visualize* customer segments with scatter plots  
-    - *Upload your own dataset* and get predictions  
-    - *Clustering Metrics* like Silhouette Score & Inertia  
-    - *Cluster Summary Table* to understand customer groups  
+    Features:
+    - Automatically groups customers into different clusters  
+    - Visualize customer segments with scatter plots  
+    - Upload your own dataset and get predictions  
+    - Clustering Metrics like Silhouette Score & Inertia  
+    - Cluster Summary Table to understand customer groups  
     """)
 
     # Displaying Clustering Scores
-    st.write(f'✅ *Silhouette Score (Higher is Better):* {silhouette_avg:.4f}')
-    st.write(f'✅ *Inertia (WCSS - Lower is Better):* {inertia:.2f}')
+    st.write(f'Silhouette Score (Higher is Better): {silhouette_avg:.4f}')
+    st.write(f'Inertia (WCSS - Lower is Better): {inertia:.2f}')
 
     # Example Scatter Plot
-    st.write('### 📌 Example: Customer Segments Visualization')
+    st.write('Example: Customer Segments Visualization')
     fig, ax = plt.subplots(figsize=(8, 6))
     sns.scatterplot(x=df['Annual Income (k$)'], y=df['Spending Score (1-100)'], hue=df['Cluster'], palette='viridis',
                     ax=ax)
@@ -95,7 +94,7 @@ if selected == "Home":
     plt.clf()
 
     # Example Cluster Summary Table
-    st.write("### 📊 Example: Cluster Summary Table")
+    st.write("Example: Cluster Summary Table")
     example_summary = pd.DataFrame({
         "Cluster": [0, 1, 2],
         "Customers": [15, 20, 10],
@@ -106,7 +105,7 @@ if selected == "Home":
     st.dataframe(example_summary)
 
 if selected == "Upload & Predict":
-    st.header('📤 Upload Your Data & Predict')
+    st.header('Upload Your Data & Predict')
     uploaded_file = st.file_uploader('Upload File', type=['csv'])
 
     if uploaded_file is not None:
@@ -127,7 +126,7 @@ if selected == "Upload & Predict":
                 user_silhouette_score = "Not available (only 1 cluster detected)"
 
             # Display user input dataset
-            st.write('### 📥 Uploaded Dataset:')
+            st.write('Uploaded Dataset:')
             st.dataframe(user_data)
 
             # Display cluster summary with averages
@@ -138,14 +137,14 @@ if selected == "Upload & Predict":
                 Avg_Spending_Score=('Spending Score (1-100)', 'mean')
             ).reset_index()
 
-            st.write('### 📊 Cluster Summary (Averages):')
+            st.write('Cluster Summary (Averages):')
             st.dataframe(cluster_summary)
 
             # Display silhouette score
-            st.write(f'✅ *Silhouette Score for Uploaded Data:* {user_silhouette_score}')
+            st.write(f'Silhouette Score for Uploaded Data: {user_silhouette_score}')
 
             # Visual Representation of the clustered data
-            st.write('### 📌 Visual Representation of Segmented Data:')
+            st.write('Visual Representation of Segmented Data:')
             fig, ax = plt.subplots(figsize=(8, 6))
             sns.scatterplot(x=user_data['Annual Income (k$)'], y=user_data['Spending Score (1-100)'],
                             hue=user_data['Cluster'], palette='viridis', ax=ax)
@@ -156,4 +155,4 @@ if selected == "Upload & Predict":
             plt.clf()
 
         else:
-            st.error(f'⚠ Missing columns! Ensure your file contains: {features}')
+            st.error(f'Missing columns! Ensure your file contains: {features}')
